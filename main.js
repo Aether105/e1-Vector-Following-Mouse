@@ -1,4 +1,4 @@
-import { Application, Graphics, Text, Ticker, Container } from "./node_modules/pixi.js/dist/pixi.mjs";
+import { Application, Graphics, Text, Container } from 'https://cdn.jsdelivr.net/npm/pixi.js@8.x/dist/pixi.mjs';
 
 (async () => {
     const app = new Application();
@@ -19,7 +19,7 @@ import { Application, Graphics, Text, Ticker, Container } from "./node_modules/p
     ball.x = 100;
     ball.y = 100;
 
-    // Variables for the sphysics and mouse tracking.
+    // Variables for the physics and mouse tracking.
     let mouseX = 740;
     let mouseY = 300;
     let velocityX = 0;
@@ -30,7 +30,6 @@ import { Application, Graphics, Text, Ticker, Container } from "./node_modules/p
     const minAcceleration = 0.001;
     const maxAcceleration = 0.02;
     const accelerationStep = 0.001; // How much it changes with each click.
-
 
     const friction = 0.9;
 
@@ -55,7 +54,7 @@ import { Application, Graphics, Text, Ticker, Container } from "./node_modules/p
     const buttonTextSize = 30;
     const buttonMargin = 15; // The space between the buttons.
 
-    // Button Creation.
+    // Button creation.
     function createButton(text, x, y, onClick){
         const button = new Container();
         button.x = x;
@@ -64,15 +63,18 @@ import { Application, Graphics, Text, Ticker, Container } from "./node_modules/p
         button.cursor = 'pointer';
 
         // Draws the button rectangle.
-        const buttonRect = new Graphics().rect(0, 0, buttonWidth, buttonHeight, 10).fill(buttonColour);
+        const buttonRect = new Graphics().rect(0, 0, buttonWidth, buttonHeight).fill(buttonColour);
         button.addChild(buttonRect);
 
         // Creates the text.
-        const buttonTextObj = new Text(text, {
-            fill: buttonTextColour,
-            fontSize: buttonTextSize,
-            align: 'center',
-            fontWeight: 'bold',
+        const buttonTextObj = new Text({
+            text: text,
+            style: {
+                fill: buttonTextColour,
+                fontSize: buttonTextSize,
+                align: 'center',
+                fontWeight: 'bold',
+            }
         });
         buttonTextObj.x = buttonWidth * 0.5;
         buttonTextObj.y = buttonHeight * 0.5;
@@ -97,12 +99,12 @@ import { Application, Graphics, Text, Ticker, Container } from "./node_modules/p
                 buttonRect.tint = 0xFFFFFF;
                 button.scale.set(1); // Ensures normal scale.
             });
-        
+
         return button;
     }
 
     // Calculates the button positions.
-    const buttonGroupX = app.screen.width - buttonWidth - 1400; // 1400px from the right edge.
+    const buttonGroupX = app.screen.width - 1400; // 1400px from the right edge.
     const buttonGroupY = app.screen.height * 0.5 - (buttonHeight + buttonMargin) * 0.5; // Centres vertically.
 
     // Plus button to increase acceleration.
@@ -127,13 +129,12 @@ import { Application, Graphics, Text, Ticker, Container } from "./node_modules/p
     });
     app.stage.addChild(minusButton);
 
-
     // Animation loop using Pixi.js Ticker.
     app.ticker.add(() => {
         // Calculates the distance to mouse.
         const distanceX = mouseX - ball.x;
         const distanceY = mouseY - ball.y;
-        
+
         // Applies acceleration.
         velocityX += distanceX * acceleration;
         velocityY += distanceY * acceleration;
@@ -158,10 +159,9 @@ import { Application, Graphics, Text, Ticker, Container } from "./node_modules/p
         if (ball.y - ballSize * 0.5 < 0){
             ball.y = ballSize * 0.5;
             velocityY = 0;
-        }  else if (ball.y + ballSize / 2 > app.screen.height) {
-            ball.y = app.screen.height - ballSize / 2;
+        }  else if (ball.y + ballSize * 0.5 > app.screen.height) {
+            ball.y = app.screen.height - ballSize * 0.5;
             velocityY = 0;
         }
     });
-
 })();
